@@ -1,0 +1,8 @@
+- name: Update apt
+  command: apt update 
+
+- name: Install git
+  become_user: root
+  become: yes
+  apt:
+    name: git

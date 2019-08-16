@@ -1,0 +1,9 @@
+---
+- name: Run my Gradle-Appium playbook
+  hosts:  localhost
+  become_user: vagrant
+  become: yes
+
+  roles:
+    - {role: androidsdk}
+ 

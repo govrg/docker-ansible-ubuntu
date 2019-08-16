@@ -1,0 +1,55 @@
+- name: Creat vagrant login user
+  become_user: root
+  user:
+    name: vagrant
+    password: '$6$2pmFYcUFCX$RsVtvt2wInXxJlflyYcXB3AuGRk9JKsRAcyCokA3xxZhI.7SBJsB4VJaykK/XAG1lp2PwqWuUnVYY9a3wX7YF1'
+    groups: sudo, vagrant   # Empty by default.
+    state: present
+    shell: /bin/bash       
+    system: no             
+    createhome: yes      
+    home: /home/vagrant  # Defaults to /home/<username>
+
+- name: Add user to sudoers file
+  become_user: root
+  lineinfile:
+    path: /etc/sudoers
+    regexp: '^vagrant'
+    line: 'vagrant ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
+- name: Add user "vagrant" to sudo
+  become_user: root
+  lineinfile:
+    path: /etc/sudoers.d/vagrant
+    line: 'vagrant ALL=(ALL) NOPASSWD: ALL'
+    state: present
+    mode: 0644
+    create: yes
+    validate: 'visudo -cf %s'
+
+- name: Set includedir in sudoers
+  become_user: root
+  lineinfile:
+    dest: /etc/sudoers
+    line: "#includedir /etc/sudoers.d"
+    state: present
+    validate: "/usr/sbin/visudo -cf %s"
+
+- name: "Create owner for home/vagrant"
+  file:
+    path: /home/vagrant
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0777
+
+- name: Change file ownership, group and permissions
+  shell: chown vagrant.vagrant /home/vagrant/vagrant-ansible-ubuntu/ -R 
+
+- name: Source myvars.sh 
+  become_user: vagrant
+  become: no
+  shell: source /etc/profile.d/myvars.sh 
+  args:
+     executable: /bin/bash 

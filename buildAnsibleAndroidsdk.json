@@ -1,0 +1,51 @@
+{
+  "variables": {
+    "user": "vagrant",
+    "ansible_python_interpreter": "/usr/bin/python3",
+    "ansible_user": "vagrant",
+    "ansible_password": "ubuntu"
+  },
+  "builders":[{
+    "type": "docker",
+    "image": "govrg/e2e-ansibleproject",
+    "commit": true
+  }],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "mkdir -p /home/vagrant/android-sdk-linux",
+        "chown -R vagrant:vagrant /home/vagrant/android-sdk-linux/"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "chown vagrant:vagrant /home/vagrant/android-sdk-linux -R",
+        "chmod 0777 /home/vagrant/android-sdk-linux"
+      ]
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "localAnsibleAndroidsdk.yml",
+      "playbook_dir": "/home/vagrant/vagrant-ansible-ubuntu",
+      "extra_arguments": [
+        "-i inventory/hosts"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "chown vagrant:vagrant /home/vagrant/android-sdk-linux -R",
+        "chmod 0777 /home/vagrant/android-sdk-linux -R"
+      ]
+    }
+  ],
+  "post-processors": [[
+    {
+      "type": "docker-tag",
+      "repository": "govrg/e2e-ansible-androidsdk",
+      "tag": "latest"
+    }
+  ]]
+}

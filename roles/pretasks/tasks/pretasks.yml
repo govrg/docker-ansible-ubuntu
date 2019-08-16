@@ -1,0 +1,78 @@
+- name: Update all packages to the latest version
+  apt:
+    upgrade: dist
+
+- name: Upgrade all packages to the latest version
+  apt:
+    name: "*"
+    state: latest
+
+- name: Install OpenSSL
+  apt:
+    name: libssl-dev
+
+- name: Install zlib1g-dev
+  apt:
+    name: zlib1g-dev
+
+- name: Install libcurl4        
+  apt:
+    name: libcurl4            
+
+- name: Install libcurl4-openssl
+  apt:
+    name: libcurl4-openssl-dev
+
+- name: Install rsync
+  apt:
+    name: rsync
+
+- name: Install lsusb
+  apt:
+    name: usbutils
+
+- name: Install udev needed for reload usb device list
+  apt:
+    name: udev
+
+- name: Source myvars.sh 
+  become_user: vagrant
+  become: no
+  shell: source /etc/profile.d/myvars.sh 
+  args:
+     executable: /bin/bash
+
+- name: Creates directory for packer
+  become_user: vagrant
+  become: yes
+  file:
+    path: /home/vagrant/packer
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0777
+
+- name: Download and decompress Packer 
+  become_user: vagrant
+  unarchive: 
+    src: https://releases.hashicorp.com/packer/1.4.1/packer_1.4.1_linux_amd64.zip
+    dest: /home/vagrant/packer
+    remote_src: yes
+
+- name: Copy build.json script to the folder 
+  become_user: vagrant
+  copy: 
+    src: /home/vagrant/vagrant-ansible-ubuntu/build.json
+    dest: /home/vagrant/packer/build.json
+
+- name: Add packer to Path in bashrc
+  become_user: vagrant
+  lineinfile:
+    dest: /home/vagrant/.bashrc
+    line: "{{ item }}"
+  with_items:
+    - 'export PATH=$PATH:/home/vagrant/packer'    
+
+- name: update repositories
+  apt: update_cache=yes
+  changed_when: false

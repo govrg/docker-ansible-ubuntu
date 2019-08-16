@@ -1,0 +1,54 @@
+- name: Creates directory for appium
+  become_user: vagrant
+  become: yes
+  file:
+    path: /home/vagrant/appium/
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0777
+
+- name: Creates remote ansible directory
+  become_user: vagrant
+  become: yes
+  file:
+    path: /home/vagrant/.ansible/tmp
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0777
+
+- name: Download and decompress Appium from {{ appium_commandline_url }}
+  become_user: vagrant
+  unarchive: 
+    src: "{{ appium_commandline_url }}"
+    dest:  /home/vagrant/appium
+    remote_src: yes
+
+- name: Add appium to Path in bashrc
+  become_user: vagrant
+  lineinfile:
+    dest: /home/vagrant/.bashrc
+    line: "{{ item }}"
+  with_items:
+    - 'export PATH=$PATH:/home/vagrant/appium/node-v12.4.0-linux-x64/bin/'
+    - 'export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64'
+    - 'export GORDON=appiumtest'
+
+- name: "Add new path into user environment"
+  lineinfile: 
+    dest: /etc/environment
+    regexp: ^PATH
+    line: PATH="/home/vagrant/appium/node-v12.4.0-linux-x64/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/vagrant/android-sdk-linux/tools:/home/vagrant/android-sdk-linux/tools/bin:/home/vagrant/android-sdk-linux/platform-tools"
+    state: present
+    mode: 0644
+    owner: root
+    group: root
+    backup: yes
+
+- name: Sourse bashrc and install Appium
+  become_user: vagrant
+  become: no
+  shell: . /home/vagrant/myvars.sh && npm install -g appium --unsafe-perm=true --allow-root
+  args:
+    executable: /bin/bash

@@ -1,0 +1,91 @@
+{
+  "variables": {
+    "user": "vagrant",
+    "ansible_python_interpreter": "/usr/bin/python3",
+    "ansible_user": "vagrant",
+    "ansible_password": "ubuntu"
+  },
+  "builders":[{
+    "type": "docker",
+    "image": "wiltoniot/bionic-amd64",
+    "commit": true
+  }],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "mkdir -p /etc/sudoers.d",
+        "apt-get -y update",
+        "apt-get install -y libvshadow-utils",
+        "apt-get install -y software-properties-common",
+        "apt-add-repository ppa:ansible/ansible",
+        "apt-get -y update",
+        "apt-get install -y ansible",
+        "apt install sudo"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64",
+        "ANDROID_HOME=/home/vagrant/android-sdk-linux",
+        "ANDROID_SDK_ROOT=/home/vagrant/android-sdk-linux",
+        "ANDROID_TOOLS=/home/vagrant/android-sdk-linux/tools/",
+        "ANDROID_PLATFORM_TOOLS=/home/vagrant/android-sdk-linux/platform-tools/",
+        "PATH=/home/vagrant/appium/node-v12.4.0-linux-x64/bin:/home/vagrant/android-sdk-linux/tools:/home/vagrant/android-sdk-linux/tools/bin:/home/vagrant/android-sdk-linux/platform-tools:/opt/gradle/gradle-5.0/bin:$PATH"
+      ],
+      "inline": [
+        "/usr/sbin/useradd -s /bin/bash -d /home/vagrant/ -m -G sudo vagrant",
+        "echo %vagrant ALL=NOPASSWD:ALL >> /etc/sudoers.d/vagrant"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "mkdir -p /home/vagrant/vagrant-ansible-ubuntu",
+        "chown -R vagrant:vagrant /home/vagrant/vagrant-ansible-ubuntu/",
+        "chmod 0440 /etc/sudoers.d/vagrant",
+        "apt-get update",
+        "apt-get install nano",
+        "apt-get install -y usbutils",
+        "apt-get install -y udev",
+        "apt-get update",
+        "apt-get install libssl-dev",
+        "apt-get install -y xarchiver"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "/home/vagrant/vagrant-ansible-ubuntu/",
+      "destination": "/home/vagrant/vagrant-ansible-ubuntu"
+    },
+    {
+      "type": "file",
+      "source": "/home/vagrant/myvars.sh",
+      "destination": "/home/vagrant/myvars.sh"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "chown vagrant:vagrant /home/vagrant/ -R",
+        "chmod 0777 /home/vagrant/"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "chown vagrant:vagrant /home/vagrant/ -R",
+        "chmod 0777 /home/vagrant/",
+        "sudo chmod u+x /home/vagrant/myvars.sh",
+        ". /home/vagrant/myvars.sh"
+      ]
+    }
+  ],
+  "post-processors": [[
+    {
+      "type": "docker-tag",
+      "repository": "govrg/e2e-ansibleproject",
+      "tag": "latest"
+    }
+  ]]
+}

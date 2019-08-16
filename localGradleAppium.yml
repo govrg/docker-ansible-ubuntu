@@ -1,0 +1,10 @@
+---
+- name: Run my playbook
+  hosts:  localhost
+  become_user: vagrant
+  become: yes
+
+  roles:
+    - { role: appium, tags: ['appium'] }
+    - { role: gradle, tags: ['gradle'] }
+ 

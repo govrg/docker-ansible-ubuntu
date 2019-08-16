@@ -1,0 +1,69 @@
+- name: Cloning repo
+  become_user: vagrant
+  become: no
+  git:
+    repo: https://github.com/Jojnts/e2e-test-automation-framework.git
+    dest: /home/vagrant/e2e-test
+    accept_hostkey: yes
+    force: yes
+    recursive: no
+    key_file: /home/vagrant/.ssh/id_rsa
+
+- name: Make chromeDrivers executable
+  become_user: root
+  become: true
+  file:
+    path: /home/vagrant/e2e-test/chromeDrivers
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0775
+    recurse: yes
+
+- name: "Make directory e2e-test owned by vagrant"
+  file:
+    path: /home/vagrant/e2e-test
+    state: directory
+    owner: vagrant
+    group: vagrant    
+
+- name: Create gradle wrapper
+  become_user: vagrant
+  shell: . /etc/profile.d/myvars.sh && gradle wrapper || true
+  args:
+    chdir: /home/vagrant/e2e-test
+    executable: /bin/bash
+
+- name: Create gradle wrapper
+  become_user: vagrant
+  shell: . /home/vagrant/myvars.sh && gradle wrapper || true
+  args:
+    chdir: /home/vagrant/e2e-test
+    executable: /bin/bash
+
+- name: Make device Huawei approved for Ubuntu
+  become_user: root
+  lineinfile:
+    path: /etc/udev/rules.d/51-android.rules
+    line: SUBSYSTEM=="usb", ATTR{idVendor}=="12d1", ATTR{idProduct}=="107f", MODE="0666", GROUP="plugdev"
+    create: yes
+
+- name: Reload usb connetction
+  become_user: vagrant
+  shell: . /etc/profile.d/myvars.sh && sudo udevadm control --reload-rule || true
+  args:
+    executable: /bin/bash
+
+- name: Make sure that all files are owned by the user vagrant 
+  become_user: root
+  shell: chown -R vagrant:vagrant /home/vagrant/e2e-test/
+  args:
+    executable: /bin/bash
+
+
+#- name: Run all tests 
+#  become_user: vagrant
+#  shell: ./gradlew test --info
+#  args:
+#    chdir: /home/vagrant/e2e-test
+#    executable: /bin/bash

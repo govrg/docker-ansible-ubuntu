@@ -1,0 +1,37 @@
+{
+  "variables": {
+    "user": "vagrant",
+    "ansible_python_interpreter": "/usr/bin/python3",
+    "ansible_user": "vagrant",
+    "ansible_password": "ubuntu"
+  },
+  "builders":[{
+    "type": "docker",
+    "image": "govrg/e2e-ansible-androidsdk",
+    "commit": true
+  }],
+  "provisioners": [
+    {
+      "type": "ansible-local",
+      "playbook_file": "localGradleAppium.yml",
+      "playbook_dir": "/home/vagrant/vagrant-ansible-ubuntu",
+      "extra_arguments": [
+        "-i inventory/hosts"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo chown vagrant:vagrant /home/vagrant/appium/ -R",
+        "sudo chmod 0777 /home/vagrant/appium -R"
+      ]
+    }
+  ],
+  "post-processors": [[
+    {
+      "type": "docker-tag",
+      "repository": "govrg/e2e-gradle-appium",
+      "tag": "latest"
+    }
+  ]]
+}

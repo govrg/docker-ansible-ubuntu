@@ -1,0 +1,9 @@
+  - name: Removing
+    become_user: vagrant
+    become: yes
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+      - /home/vagrant/ansible
+      - /home/vagrant/vagrant-ansible-ubuntu

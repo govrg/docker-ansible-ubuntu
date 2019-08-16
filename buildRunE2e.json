@@ -1,0 +1,48 @@
+{
+  "variables": {
+    "user": "vagrant",
+    "ansible_python_interpreter": "/usr/bin/python3"
+  },
+  "builders":[{
+    "type": "docker",
+    "image": "govrg/e2e-gradle-appium",
+    "commit": true,
+    "changes": [
+      "USER vagrant:vagrant"
+    ]
+  }],
+  "provisioners": [
+    {
+      "type": "ansible-local",
+      "playbook_file": "localRunE2e.yml",
+      "playbook_dir": "/home/vagrant/vagrant-ansible-ubuntu",
+      "extra_arguments": [
+        "-i inventory/hosts"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "/home/vagrant/vagrant-ansible-ubuntu/startE2eTests.sh",
+      "destination": "/home/vagrant/startE2eTests.sh"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo chown vagrant:vagrant /home/vagrant/startE2eTests.sh",
+        "sudo chmod 0777 /home/vagrant/startE2eTests.sh",
+        "cd /home/vagrant/e2e-test",
+        ". /home/vagrant/myvars.sh && gradle wrapper",
+        "sudo chown vagrant:vagrant /home/vagrant/e2e-test/ -R",
+        "sudo rm -rf /home/vagrant/vagrant-ansible-ubuntu/"
+
+      ]
+    }
+  ],
+  "post-processors": [[
+    {
+      "type": "docker-tag",
+      "repository": "govrg/run-e2e-tests",
+      "tag": "latest"
+    }
+  ]]
+}

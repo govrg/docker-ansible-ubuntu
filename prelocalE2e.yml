@@ -1,0 +1,20 @@
+---
+- hosts: master #, workers
+  become: yes
+
+  roles:
+    - { role: pretasks, tags: ['pretasks'] }
+    - { role: users, tags: ['users'] }
+    - { role: python, tags: ['python'] }
+    - { role: git, tags: ['git'] }
+  #  #- { role: gnome, tags: ['gnome'] }
+    - { role: java, tags: ['java'] }
+    #- { role: npmnode, tags: ['npmnode']}
+    - { role: androidsdk, tags: ['androidsdk'] }
+    - { role: appium, tags: ['appium'] }
+    - { role: gradle, tags: ['gradle'] }
+    - { role: githubrepo, tags: ['githubrepo'] }
+    - { role: docker, tags: ['docker'] }
+#   - {role: kubernetes, tags: ['kubernetes']}
+#    - { role: cleaup, tags: ['cleanup'] }
+ 

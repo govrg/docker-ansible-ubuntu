@@ -1,0 +1,13 @@
+---
+
+- name: Run my Ansible project base playbook
+  hosts:  localhost
+  become_user: vagrant
+  become: yes
+
+  roles:
+    - { role: pretasks, tags: ['pretasks'] }
+    - { role: users, tags: ['users'] }
+    - { role: python, tags: ['python'] }
+    - { role: git, tags: ['git'] }
+    - { role: java, tags: ['java'] }

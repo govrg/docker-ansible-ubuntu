@@ -1,0 +1,20 @@
+- name: Install install curl
+  become_user: vagrant
+  become: yes
+  apt: 
+    name: curl
+    state: latest
+
+#curl -sL https://deb.nodesource.com/setup_11.x | sudo bash -
+- name: Install get curl
+  become_user: vagrant
+  become: yes
+  shell:  curl -sL https://deb.nodesource.com/setup_11.x | sudo bash -
+  
+
+#Install both Node.js and NPM with one command
+- name: install both Node.js and NPM
+  become_user: vagrant
+  become: yes
+  command: sudo apt-get install -y nodejs
+
