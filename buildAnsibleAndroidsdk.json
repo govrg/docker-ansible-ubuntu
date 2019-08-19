@@ -28,7 +28,7 @@
     {
       "type": "ansible-local",
       "playbook_file": "localAnsibleAndroidsdk.yml",
-      "playbook_dir": "/home/vagrant/vagrant-ansible-ubuntu",
+      "playbook_dir": "/home/vagrant/docker-ansible-ubuntu",
       "extra_arguments": [
         "-i inventory/hosts"
       ]

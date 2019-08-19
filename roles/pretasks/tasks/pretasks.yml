@@ -46,7 +46,7 @@
   become_user: vagrant
   become: yes
   file:
-    path: /home/vagrant/packer
+    path: /home/vagrant/packer/
     state: directory
     owner: vagrant
     group: vagrant
@@ -59,11 +59,6 @@
     dest: /home/vagrant/packer
     remote_src: yes
 
-- name: Copy build.json script to the folder 
-  become_user: vagrant
-  copy: 
-    src: /home/vagrant/vagrant-ansible-ubuntu/build.json
-    dest: /home/vagrant/packer/build.json
 
 - name: Add packer to Path in bashrc
   become_user: vagrant

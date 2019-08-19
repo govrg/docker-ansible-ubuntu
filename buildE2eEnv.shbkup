@@ -1,8 +1,0 @@
-﻿#!/bin/bash
-
-. /home/vagrant/myvars.sh
-cd /home/vagrant/vagrant-ansible-ubuntu
-ansible-playbook localE2e.yml --tags "androidsdk, appium, gradle, githubrepo"
-cd /home/vagrant/e2e-test
-gradle wrapper
-adb devices

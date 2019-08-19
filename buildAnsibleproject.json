@@ -42,8 +42,8 @@
     {
       "type": "shell",
       "inline": [
-        "mkdir -p /home/vagrant/vagrant-ansible-ubuntu",
-        "chown -R vagrant:vagrant /home/vagrant/vagrant-ansible-ubuntu/",
+        "mkdir -p /home/vagrant/docker-ansible-ubuntu",
+        "chown -R vagrant:vagrant /home/vagrant/docker-ansible-ubuntu/",
         "chmod 0440 /etc/sudoers.d/vagrant",
         "apt-get update",
         "apt-get install nano",
@@ -56,8 +56,8 @@
     },
     {
       "type": "file",
-      "source": "/home/vagrant/vagrant-ansible-ubuntu/",
-      "destination": "/home/vagrant/vagrant-ansible-ubuntu"
+      "source": "/home/vagrant/docker-ansible-ubuntu/",
+      "destination": "/home/vagrant/docker-ansible-ubuntu"
     },
     {
       "type": "file",

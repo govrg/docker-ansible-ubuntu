@@ -15,14 +15,14 @@
     {
       "type": "ansible-local",
       "playbook_file": "localRunE2e.yml",
-      "playbook_dir": "/home/vagrant/vagrant-ansible-ubuntu",
+      "playbook_dir": "/home/vagrant/docker-ansible-ubuntu",
       "extra_arguments": [
         "-i inventory/hosts"
       ]
     },
     {
       "type": "file",
-      "source": "/home/vagrant/vagrant-ansible-ubuntu/startE2eTests.sh",
+      "source": "/home/vagrant/docker-ansible-ubuntu/startE2eTests.sh",
       "destination": "/home/vagrant/startE2eTests.sh"
     },
     {
@@ -33,7 +33,7 @@
         "cd /home/vagrant/e2e-test",
         ". /home/vagrant/myvars.sh && gradle wrapper",
         "sudo chown vagrant:vagrant /home/vagrant/e2e-test/ -R",
-        "sudo rm -rf /home/vagrant/vagrant-ansible-ubuntu/"
+        "sudo rm -rf /home/vagrant/docker-ansible-ubuntu/"
 
       ]
     }
