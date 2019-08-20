@@ -1,0 +1,50 @@
+- name: Update all packages to the latest version
+  become_user: root
+  apt:
+    upgrade: dist
+
+- name: Upgrade all packages to the latest version
+  become_user: root
+  apt:
+    name: "*"
+    state: latest
+
+- name: Packages required for the ruby-build tool to build Ruby from source
+  become_user: vagrant
+  become: yes
+  shell: sudo apt install libssl-dev libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev
+  args:
+   executable: /bin/bash
+
+- name: Install both rbenv and ruby-build
+  become_user: vagrant
+  shell: curl -sL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash -
+
+# Environment setup.
+- name: Set rbenv PATH
+  lineinfile:
+    dest: ~/.bashrc
+    state: present
+    backrefs: no
+    line: "export PATH='$HOME/.rbenv/bin:$PATH'"
+
+- name: Eval rbenv
+  lineinfile:
+    dest: ~/.bashrc
+    state: present
+    backrefs: no
+    line: "eval '$(rbenv init -)'"
+
+- name: Source bashrc 
+  become_user: vagrant
+  become: no
+  shell: source ~/.bashrc
+  args:
+     executable: /bin/bash
+
+- name: Install ruby 
+  become_user: vagrant
+  become: no
+  shell: rbenv install {{ version }}
+  args:
+     executable: /bin/bash

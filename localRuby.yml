@@ -1,0 +1,8 @@
+---
+- name: Run my playbook
+  hosts:  localhost
+  become_user: vagrant
+  become: yes
+
+  roles:
+    - { role: ruby, tags: ['ruby'] }

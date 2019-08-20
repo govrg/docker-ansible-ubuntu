@@ -10,6 +10,7 @@ export ANDROID_TOOLS=/home/vagrant/android-sdk-linux/tools/
 export ANDROID_PLATFORM_TOOLS=/home/vagrant/android-sdk-linux/platform-tools/
 export PATH=$PATH:/home/vagrant/android-sdk-linux/tools/:/home/vagrant/android-sdk-linux/platform-tools
 export PATH=PATH:/home/vagrant/packer:/home/vagrant/appium/node-v12.4.0-linux-x64/bin:/home/vagrant/android-sdk-linux/tools:/home/vagrant/android-sdk-linux/tools/bin:/home/vagrant/android-sdk-linux/platform-tools:/opt/gradle/gradle-5.0/bin:$PATH
+export PATH="$HOME/.rbenv/bin:$PATH
 
 EOF
 SCRIPT
