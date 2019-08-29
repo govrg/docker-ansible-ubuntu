@@ -1,9 +1,6 @@
 [master]
 masterE2e
 
-[circleci]
-circleci1
-
 [localhost]
 127.0.0.1 ansible_connection=local
 
